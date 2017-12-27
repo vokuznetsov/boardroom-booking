@@ -1,4 +1,4 @@
-package com.smartbics.booking.dto;
+package com.smartbics.booking.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
