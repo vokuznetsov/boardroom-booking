@@ -1,35 +1,32 @@
 package com.smartbics.booking.controllers;
 
-import com.smartbics.booking.dto.input.InputFormatDto;
-import com.smartbics.booking.dto.output.OutputFormatDto;
+import com.smartbics.booking.BookingStatus;
+import com.smartbics.booking.model.MeetingInformationDto;
+import com.smartbics.booking.beans.BookingCalendar;
 import com.smartbics.booking.service.IBookingService;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/booking")
 public class BookingController {
 
     private final IBookingService bookingService;
-    private OutputFormatDto output;
 
-    public BookingController(IBookingService bookingService,
-                             OutputFormatDto output) {
+    public BookingController(IBookingService bookingService) {
         this.bookingService = bookingService;
-        this.output = output;
     }
 
-    @GetMapping("/test")
-    public String testMethod() {
-        System.out.println("Output" + output);
-        return "test";
+    @PostMapping
+    public BookingCalendar bookBoardroom(@Valid @RequestBody MeetingInformationDto meeting) {
+        return bookingService.book(meeting);
     }
 
-    @PostMapping()
-    public OutputFormatDto input(@Valid @RequestBody InputFormatDto input) {
-        OutputFormatDto output = bookingService.book(input);
-        return output;
+    @GetMapping
+    public BookingStatus getBookingByDate(@RequestParam(value = "date") String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        return bookingService.getBookingStatusByDate(localDate);
     }
 }

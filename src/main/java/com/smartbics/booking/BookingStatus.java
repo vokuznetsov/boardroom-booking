@@ -1,21 +1,22 @@
-package com.smartbics.booking.dto.output;
+package com.smartbics.booking;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 
-public class BookingStatusDto {
+public class BookingStatus {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate day;
 
     @JsonProperty("reservation-time")
-    private List<ReservationTimeDto> reservationTime;
+    private List<ReservationTime> reservationTime;
 
-    public BookingStatusDto() {
+    public BookingStatus() {
     }
 
     public LocalDate getDay() {
@@ -26,11 +27,16 @@ public class BookingStatusDto {
         this.day = day;
     }
 
-    public List<ReservationTimeDto> getReservationTime() {
+    public List<ReservationTime> getReservationTime() {
         return reservationTime;
     }
 
-    public void setReservationTime(List<ReservationTimeDto> reservationTime) {
+    public void setReservationTime(List<ReservationTime> reservationTime) {
         this.reservationTime = reservationTime;
+    }
+
+    public BookingStatus sort() {
+        reservationTime.sort(Comparator.comparing(ReservationTime::getStart));
+        return this;
     }
 }

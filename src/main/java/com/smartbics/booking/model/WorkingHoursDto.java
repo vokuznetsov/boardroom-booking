@@ -1,9 +1,8 @@
-package com.smartbics.booking.dto.input;
+package com.smartbics.booking.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class WorkingHoursDto {
 

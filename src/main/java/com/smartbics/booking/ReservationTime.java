@@ -1,11 +1,11 @@
-package com.smartbics.booking.dto.output;
+package com.smartbics.booking;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalTime;
 
 
-public class ReservationTimeDto {
+public class ReservationTime {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime start;
@@ -14,7 +14,7 @@ public class ReservationTimeDto {
 
     private String employeeId;
 
-    public ReservationTimeDto() {
+    public ReservationTime() {
     }
 
     public LocalTime getStart() {

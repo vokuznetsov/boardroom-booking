@@ -1,10 +1,10 @@
 package com.smartbics.booking.service;
 
-import com.smartbics.booking.dto.input.InputFormatDto;
-import com.smartbics.booking.dto.input.WorkingHoursDto;
-import com.smartbics.booking.dto.output.BookingStatusDto;
-import com.smartbics.booking.dto.output.OutputFormatDto;
-import com.smartbics.booking.dto.output.ReservationTimeDto;
+import com.smartbics.booking.model.MeetingInformationDto;
+import com.smartbics.booking.model.WorkingHoursDto;
+import com.smartbics.booking.BookingStatus;
+import com.smartbics.booking.beans.BookingCalendar;
+import com.smartbics.booking.ReservationTime;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,15 +16,15 @@ import java.util.List;
 @Service
 public class BookingService implements IBookingService {
 
-    private final OutputFormatDto output;
+    private final BookingCalendar output;
 
-    public BookingService(OutputFormatDto output) {
+    public BookingService(BookingCalendar output) {
         this.output = output;
     }
 
 
     @Override
-    public OutputFormatDto book(InputFormatDto input) {
+    public BookingCalendar book(MeetingInformationDto input) {
         LocalDate startMeetingDay = input.getBookingInformation().getMeetingTime().toLocalDate();
         LocalTime startMeetingTime = input.getBookingInformation().getMeetingTime().toLocalTime();
         LocalTime endMeetingTime = startMeetingTime.plusHours(input.getBookingInformation().getDuration());
@@ -33,18 +33,18 @@ public class BookingService implements IBookingService {
             return output;
         }
 
-        BookingStatusDto bookingStatus = output.getBookingStatus(startMeetingDay);
+        BookingStatus bookingStatus = output.getBookingStatus(startMeetingDay);
         if (bookingStatus == null) {
-            bookingStatus = new BookingStatusDto();
+            bookingStatus = new BookingStatus();
             bookingStatus.setDay(startMeetingDay);
 
-            List<ReservationTimeDto> reservationTimeList = new ArrayList<>();
+            List<ReservationTime> reservationTimeList = new ArrayList<>();
             reservationTimeList.add(createReservationTime(input));
 
             bookingStatus.setReservationTime(reservationTimeList);
             output.getBookingStatuses().add(bookingStatus);
         } else {
-            List<ReservationTimeDto> reservationTimes = bookingStatus.getReservationTime();
+            List<ReservationTime> reservationTimes = bookingStatus.getReservationTime();
 
             boolean overlapTime = reservationTimes.stream()
                     .anyMatch(time -> isTimeOverlap(time, startMeetingTime, endMeetingTime));
@@ -54,11 +54,17 @@ public class BookingService implements IBookingService {
             }
         }
 
-        return output;
+        return output.sort();
     }
 
-    private ReservationTimeDto createReservationTime(InputFormatDto input) {
-        ReservationTimeDto reservationTime = new ReservationTimeDto();
+    @Override
+    public BookingStatus getBookingStatusByDate(LocalDate date) {
+        BookingStatus bookingStatus = output.getBookingStatus(date);
+        return bookingStatus == null ? null : bookingStatus.sort();
+    }
+
+    private ReservationTime createReservationTime(MeetingInformationDto input) {
+        ReservationTime reservationTime = new ReservationTime();
         reservationTime.setEmployeeId(input.getBookingInformation().getEmployeeId());
 
         LocalTime meetingTime = input.getBookingInformation().getMeetingTime().toLocalTime();
@@ -68,7 +74,7 @@ public class BookingService implements IBookingService {
         return reservationTime;
     }
 
-    private boolean isTimeOverlap(ReservationTimeDto time, LocalTime startMeetingTime, LocalTime endMeetingTime) {
+    private boolean isTimeOverlap(ReservationTime time, LocalTime startMeetingTime, LocalTime endMeetingTime) {
         // ** - startMeetingTime/endMeetingTime
         // && - already booking time (start/end)
         // ---- - time line
