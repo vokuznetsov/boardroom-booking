@@ -16,10 +16,6 @@ public class MeetingInformationDto {
     public MeetingInformationDto() {
     }
 
-    public MeetingInformationDto(WorkingHoursDto workingHours) {
-        this.workingHours = workingHours;
-    }
-
     public WorkingHoursDto getWorkingHours() {
         return workingHours;
     }

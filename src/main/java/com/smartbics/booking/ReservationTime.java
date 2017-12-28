@@ -1,7 +1,9 @@
 package com.smartbics.booking;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
@@ -13,6 +15,9 @@ public class ReservationTime {
     private LocalTime end;
 
     private String employeeId;
+
+    @JsonIgnore
+    private LocalDateTime submissionTime;
 
     public ReservationTime() {
     }
@@ -39,5 +44,13 @@ public class ReservationTime {
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public LocalDateTime getSubmissionTime() {
+        return submissionTime;
+    }
+
+    public void setSubmissionTime(LocalDateTime submissionTime) {
+        this.submissionTime = submissionTime;
     }
 }

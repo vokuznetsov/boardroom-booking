@@ -17,6 +17,12 @@ public interface IBookingService {
      */
     BookingCalendar book(MeetingInformationDto input);
 
+    /**
+     * Return reservation time of boardroom for specific date
+     *
+     * @param date
+     * @return
+     */
     BookingStatus getBookingStatusByDate(LocalDate date);
 
 }
