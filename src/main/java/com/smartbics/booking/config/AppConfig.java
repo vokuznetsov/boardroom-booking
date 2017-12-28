@@ -10,7 +10,6 @@ public class AppConfig {
 
     @Bean
     public OutputFormatDto outputInitializer() {
-        OutputFormatDto outputFormatDto = new OutputFormatDto();
-        return outputFormatDto;
+        return new OutputFormatDto();
     }
 }

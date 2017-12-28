@@ -1,6 +1,7 @@
 package com.smartbics.booking.service;
 
 import com.smartbics.booking.dto.input.InputFormatDto;
+import com.smartbics.booking.dto.input.WorkingHoursDto;
 import com.smartbics.booking.dto.output.BookingStatusDto;
 import com.smartbics.booking.dto.output.OutputFormatDto;
 import com.smartbics.booking.dto.output.ReservationTimeDto;
@@ -24,26 +25,36 @@ public class BookingService implements IBookingService {
 
     @Override
     public OutputFormatDto book(InputFormatDto input) {
-        LocalDate day = input.getBookingInformation().getMeetingTime().toLocalDate();
-        BookingStatusDto bookingStatus = getBookingStatus(day);
+        LocalDate startMeetingDay = input.getBookingInformation().getMeetingTime().toLocalDate();
+        LocalTime startMeetingTime = input.getBookingInformation().getMeetingTime().toLocalTime();
+        LocalTime endMeetingTime = startMeetingTime.plusHours(input.getBookingInformation().getDuration());
+
+        if (!insideWorkingHours(input.getWorkingHours(), startMeetingTime, endMeetingTime)) {
+            return output;
+        }
+
+        BookingStatusDto bookingStatus = output.getBookingStatus(startMeetingDay);
         if (bookingStatus == null) {
             bookingStatus = new BookingStatusDto();
-            bookingStatus.setDay(day);
+            bookingStatus.setDay(startMeetingDay);
 
             List<ReservationTimeDto> reservationTimeList = new ArrayList<>();
             reservationTimeList.add(createReservationTime(input));
 
             bookingStatus.setReservationTime(reservationTimeList);
-        }
-        output.getBookingStatus().add(bookingStatus);
-        return output;
-    }
+            output.getBookingStatuses().add(bookingStatus);
+        } else {
+            List<ReservationTimeDto> reservationTimes = bookingStatus.getReservationTime();
 
-    private BookingStatusDto getBookingStatus(LocalDate date) {
-        return output.getBookingStatus().stream()
-                .filter(status -> status.getDay().equals(date))
-                .findFirst()
-                .orElse(null);
+            boolean overlapTime = reservationTimes.stream()
+                    .anyMatch(time -> isTimeOverlap(time, startMeetingTime, endMeetingTime));
+
+            if (!overlapTime) {
+                reservationTimes.add(createReservationTime(input));
+            }
+        }
+
+        return output;
     }
 
     private ReservationTimeDto createReservationTime(InputFormatDto input) {
@@ -55,5 +66,36 @@ public class BookingService implements IBookingService {
         reservationTime.setStart(meetingTime);
         reservationTime.setEnd(meetingTime.plusHours(duration));
         return reservationTime;
+    }
+
+    private boolean isTimeOverlap(ReservationTimeDto time, LocalTime startMeetingTime, LocalTime endMeetingTime) {
+        // ** - startMeetingTime/endMeetingTime
+        // && - already booking time (start/end)
+        // ---- - time line
+
+        // FIRST CASE:
+        // ------&&----**----&&----**------
+        boolean startOverlap = (time.getStart().equals(startMeetingTime) ||
+                time.getStart().isBefore(startMeetingTime)) &&
+                time.getEnd().isAfter(startMeetingTime);
+
+        // SECOND CASE:
+        // ------**----&&----**----&&------
+        boolean endOverlap = time.getEnd().isBefore(endMeetingTime) &&
+                time.getEnd().isAfter(endMeetingTime);
+
+        return startOverlap || endOverlap;
+    }
+
+    private boolean insideWorkingHours(WorkingHoursDto workingHours, LocalTime startMeetingTime, LocalTime endMeetingTime) {
+        // ** - startMeetingTime/endMeetingTime
+        // && - working hours time (start/end)
+        // ---- - time line
+
+        // ALLOWED CASE:
+        // ------&&----**----**----&&------
+        return (workingHours.getStart().equals(startMeetingTime) || workingHours.getStart().isBefore(startMeetingTime)) &&
+                (workingHours.getEnd().equals(endMeetingTime) || workingHours.getEnd().isAfter(endMeetingTime));
+
     }
 }

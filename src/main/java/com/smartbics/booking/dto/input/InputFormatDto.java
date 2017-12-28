@@ -2,12 +2,15 @@ package com.smartbics.booking.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.Valid;
+
 public class InputFormatDto {
 
     @JsonProperty("working-hours")
     private WorkingHoursDto workingHours;
 
     @JsonProperty("booking-information")
+    @Valid
     private BookingInformationDto bookingInformation;
 
     public InputFormatDto() {

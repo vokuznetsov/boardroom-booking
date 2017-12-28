@@ -3,7 +3,10 @@ package com.smartbics.booking.controllers;
 import com.smartbics.booking.dto.input.InputFormatDto;
 import com.smartbics.booking.dto.output.OutputFormatDto;
 import com.smartbics.booking.service.IBookingService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/booking")
@@ -18,7 +21,6 @@ public class BookingController {
         this.output = output;
     }
 
-
     @GetMapping("/test")
     public String testMethod() {
         System.out.println("Output" + output);
@@ -26,7 +28,7 @@ public class BookingController {
     }
 
     @PostMapping()
-    public OutputFormatDto input(@RequestBody InputFormatDto input) {
+    public OutputFormatDto input(@Valid @RequestBody InputFormatDto input) {
         OutputFormatDto output = bookingService.book(input);
         return output;
     }

@@ -3,6 +3,9 @@ package com.smartbics.booking.dto.input;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 
@@ -12,13 +15,16 @@ public class BookingInformationDto {
     @JsonProperty("submission-time")
     private LocalDateTime submissionTime;
 
+    @NotNull
     private String employeeId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     @JsonProperty("meeting-time")
     private LocalDateTime meetingTime;
 
-    private int duration;
+    @NotNull
+    @Min(1)
+    private Integer duration;
 
     public BookingInformationDto() {
     }
@@ -47,11 +53,11 @@ public class BookingInformationDto {
         this.meetingTime = meetingTime;
     }
 
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 }
