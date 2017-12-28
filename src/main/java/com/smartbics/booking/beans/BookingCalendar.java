@@ -23,15 +23,15 @@ public class BookingCalendar {
         return bookingStatuses;
     }
 
+    public void setBookingStatuses(List<BookingStatus> bookingStatuses) {
+        this.bookingStatuses = bookingStatuses;
+    }
+
     public BookingStatus getBookingStatus(LocalDate date) {
         return bookingStatuses.stream()
                 .filter(status -> status.getDay().equals(date))
                 .findFirst()
                 .orElse(null);
-    }
-
-    public void setBookingStatuses(List<BookingStatus> bookingStatuses) {
-        this.bookingStatuses = bookingStatuses;
     }
 
     public BookingCalendar sort() {

@@ -1,0 +1,64 @@
+{
+  "working-hours": {
+    "start": "0900",
+    "end": "1730"
+  },
+  "booking-information": {
+    "submission-time": "2011-03-17 10:17:06",
+    "employeeId": "EMP001",
+    "meeting-time": "2011-03-21 09:00",
+    "duration": 2
+  }
+}
+#----------------------------------------------------------
+{
+  "working-hours": {
+    "start": "0900",
+    "end": "1730"
+  },
+  "booking-information": {
+    "submission-time": "2011-03-16 12:34:56",
+    "employeeId": "EMP002",
+    "meeting-time": "2011-03-21 09:00",
+    "duration": 2
+  }
+}
+#----------------------------------------------------------
+{
+  "working-hours": {
+    "start": "0900",
+    "end": "1730"
+  },
+  "booking-information": {
+    "submission-time": "2011-03-16 09:28:23",
+    "employeeId": "EMP003",
+    "meeting-time": "2011-03-22 14:00",
+    "duration": 2
+  }
+}
+#----------------------------------------------------------
+{
+  "working-hours": {
+    "start": "0900",
+    "end": "1730"
+  },
+  "booking-information": {
+    "submission-time": "2011-03-17 11:23:45",
+    "employeeId": "EMP004",
+    "meeting-time": "2011-03-22 16:00",
+    "duration": 1
+  }
+}
+#----------------------------------------------------------
+{
+  "working-hours": {
+    "start": "0900",
+    "end": "1730"
+  },
+  "booking-information": {
+    "submission-time": "2011-03-15 17:29:12",
+    "employeeId": "EMP005",
+    "meeting-time": "2011-03-22 16:00",
+    "duration": 3
+  }
+}

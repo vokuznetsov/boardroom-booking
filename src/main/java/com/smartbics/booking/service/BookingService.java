@@ -36,7 +36,7 @@ public class BookingService implements IBookingService {
             return output;
         }
 
-        // check are there any booking on the startMeetingDate
+        // check if there are any booking on the startMeetingDate
         BookingStatus bookingStatus = output.getBookingStatus(startMeetingDay);
 
         if (bookingStatus == null) {
@@ -51,7 +51,7 @@ public class BookingService implements IBookingService {
         } else {
             List<ReservationTime> reservationTimes = bookingStatus.getReservationTime();
 
-            // check are there any collisions in meeting time and already booking time
+            // check if there are any collisions in meeting time and already booking time
             boolean overlapTime = reservationTimes.stream()
                     .anyMatch(time -> isTimeOverlap(time, startMeetingTime, endMeetingTime));
 
@@ -116,7 +116,7 @@ public class BookingService implements IBookingService {
 
         // SECOND CASE:
         // ------**----&&----**----&&------
-        boolean endOverlap = time.getEnd().isBefore(endMeetingTime) &&
+        boolean endOverlap = time.getStart().isBefore(endMeetingTime) &&
                 time.getEnd().isAfter(endMeetingTime);
 
         return startOverlap || endOverlap;
